@@ -20,3 +20,7 @@ $compra = new Payer();
 $compra->setPaymentMethod('paypal');
 
 $articulo = new Item();
+$articulo->setName($producto)
+    ->setCurrency('USD')
+    ->setQuantity(1)
+    ->setPrice($total);
