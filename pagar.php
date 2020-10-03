@@ -5,6 +5,7 @@ use PayPal\Api\Details;
 use PayPal\Api\Payer;
 use PayPal\Api\Item;
 use PayPal\Api\ItemList;
+use PayPal\Api\Payment;
 use PayPal\Api\RedirectUrls;
 use PayPal\Api\Transaction;
 
@@ -44,4 +45,22 @@ $transaccion = new Transaction();
 $transaccion->setAmount($cantidad)->setItemList($listaArticulos)->setDescription('Pago')->setInvoiceNumber(uniqid());
 
 $redireccionar = new RedirectUrls();
-$redireccionar->setReturnUrl(URL_SITIO . "/pagofinalizado.php?exito=true")->setCancelUrl(URL_SITIO . "/pagofinalizado.php?exito=false");
+$redireccionar->setReturnUrl("http://localhost/programacion/PayPal/Pagos-via-PayPal/pagado.php?exito=true")->setCancelUrl("http://localhost/programacion/PayPal/Pagos-via-PayPal/pagado.php?exito=false");
+
+//REalizando PAgo
+
+$pago = new Payment();
+$pago->setIntent("sale")->setPayer($compra)->setRedirectUrls($redireccionar)->setTransactions(array($transaccion));
+
+try {
+    $pago->create($apiContext);
+} catch (\PayPal\Exception\PayPalConnectionException $pce) {
+    echo "<pre>";
+    print_r(json_decode($pce->getData()));
+    exit;
+    echo "</pre>";
+}
+
+$aprobado = $pago->getApprovalLink();
+
+header("Location: {$aprobado}");
