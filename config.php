@@ -1,6 +1,8 @@
 <?php
 
-include 'SDK/autoload.php';
+require 'SDK/autoload.php';
+
+define('URL_SITIO', 'localhost/programacion/PayPal/Pagos-via-PayPal');
 
 $apiContext = new \PayPal\Rest\ApiContext(
     new \PayPal\Auth\OAuthTokenCredential(
